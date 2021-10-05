@@ -162,7 +162,7 @@ export default {
         !!this.$store.state.cadastro.metodosDePagamento.parcelas;
 
       if (this.cartao) {
-        if (numeroDeParcelas) return true;
+        if (this.noValidate || numeroDeParcelas) return true;
         return false;
       }
       return true;
