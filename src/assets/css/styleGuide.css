@@ -1,0 +1,56 @@
+:root {
+  --primary: #483698;
+  --secundary_0: #ffffff;
+  --secundary_1: #f9f9f9;
+  --secundary_3: #B9B9B9;
+  --secundary_4: #8A8A8A;
+  --secundary_7: #282828;
+  --cta_-1: #FFE766;
+  --cta_0: #FBDE40;
+  --danger: #DC3545;
+  --transparent: rgba(0, 0, 0, 0.0);
+}
+
+* {
+  font-family: 'Open Sans';
+  color: var(--secundary_7);
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--cta_0);
+}
+
+h1, h2, h3, h4, h5, h6, button {
+  font-family: 'Comfortaa';
+}
+
+label, .form-control, .input-group-text, select {
+  font-size: 0.875rem !important;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.card-size {
+  max-width: 800px;
+}
+
+.rounded-card {
+  border-radius: 1.2rem 1.2rem 1.2rem 1.2rem;
+}
+
+#app {
+  height: 100%;
+}
+
+@media (max-width: 960px) {
+  .card-size {
+    max-width: 100vw;
+  }
+  .rounded-card {
+    border-radius: 4.0rem 4.0rem 0 0;
+  }
+}

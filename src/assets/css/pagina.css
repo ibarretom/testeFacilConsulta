@@ -1,0 +1,70 @@
+.pagina {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+#input-group-estado, #input-group-cidade {
+  width: 45%;
+}
+
+.step-progress {
+  font-family: "Comfortaa";
+  font-weight: bold;
+}
+
+.input-group-text {
+  color: var(--secundary_1);
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+#select-group-estado, #select-group-cidade {
+  width: 45%;
+}
+
+.progress .progress-bar {
+  background-color: var(--primary) !important;
+}
+
+.width-70 {
+  width: 70% !important;
+}
+
+.step-progress {
+  font-family: "Comfortaa";
+  font-weight: bold;
+}
+
+.back-button .btn.focus, .btn:focus {
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .pagina {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    height: 110vh;
+  }
+  .grow-mobile {
+    flex: 1 1 auto;
+  }
+
+  .mobile-arrow-top {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+  }
+}
+@media (max-width: 330px) {
+  .pagina {
+    height: 130vh;
+  }
+}
