@@ -25,7 +25,7 @@
             <b-form-select
               id="input-especialidade-principal"
               v-model="$store.state.cadastro.especialidadePrincipal"
-              :options="optionsEspecialidade"
+              :options="options.especialidade"
               required
             ></b-form-select>
             <b-form-invalid-feedback :state="validateEspecialidadePrincipal">
@@ -96,7 +96,7 @@
                       v-model="
                         $store.state.cadastro.metodosDePagamento.parcelas
                       "
-                      :options="optionsParcelamento"
+                      :options="options.parcelamento"
                       stacked
                     ></b-form-radio-group>
                     <b-form-invalid-feedback :state="validateParcelas">
@@ -189,20 +189,6 @@ export default {
         { text: "3x, sem juros", value: "3x, sem juros" },
       ],
     },
-    optionsEspecialidade: [
-      { value: "", text: "Selecione a especialidade" },
-      { value: "Cardiologia", text: "Cardiologia" },
-      { value: "Dermatologia", text: "Dermatologia" },
-      { value: "Neurologia", text: "Neurologia" },
-      { value: "Oftalmologia", text: "Oftalmologia" },
-      { value: "Psiquiatria", text: "Psiquiatria" },
-      { value: "Urologia", text: "Urologia" },
-    ],
-    optionsParcelamento: [
-      { text: "1x, sem juros", value: "1x, sem juros" },
-      { text: "2x, sem juros", value: "2x, sem juros" },
-      { text: "3x, sem juros", value: "3x, sem juros" },
-    ],
   }),
   watch: {
     cartao(forVerdadeiro) {
