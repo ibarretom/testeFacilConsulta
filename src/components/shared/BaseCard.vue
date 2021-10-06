@@ -15,10 +15,11 @@
     <b-card-text>
       <b-container class="no-padding">
         <b-row>
-          <b-col>
+          <b-col cols="12" lg="6">
             <slot />
           </b-col>
           <b-col
+            lg="6"
             class="
               d-flex
               hide-mobile
