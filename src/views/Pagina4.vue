@@ -14,7 +14,7 @@
             >
               <b-img
                 :src="require(`@/assets/imagens/pagina-4.gif`)"
-                alt="Fluid image"
+                alt="Check gif"
               >
               </b-img>
               <h4 class="pb-5">Profissional cadastrado com sucesso!</h4>
@@ -73,6 +73,10 @@ h4 {
 @media (max-width: 960px) {
   .pagina-4 {
     align-items: flex-end;
+  }
+  img {
+    max-width: 90%;
+    margin: auto;
   }
 }
 </style>

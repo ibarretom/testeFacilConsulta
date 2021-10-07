@@ -50,12 +50,14 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    height: 110vh;
+    height: 100vh;
   }
   .grow-mobile {
     flex: 1 1 auto;
   }
-
+  .pagina2 {
+    height: 110vh;
+  }
   .mobile-arrow-top {
     position: fixed;
     top: 1rem;
@@ -63,8 +65,11 @@
     z-index: 3;
   }
 }
-@media (max-width: 330px) {
+@media (max-width: 360px) {
   .pagina {
     height: 130vh;
+  }
+  .pagina2 {
+    height: 140vh;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <section class="pagina">
+  <section class="pagina pagina2">
     <div class="grow-mobile">
       <div class="card-size mobile-arrow-top">
         <b-button
@@ -38,7 +38,7 @@
             </template>
           </b-form-group>
 
-          <b-input-group
+          <b-form-group
             label="Informe o preço da consulta*"
             label-for="group-preco-consulta"
             id="group-preco-consulta"
@@ -63,9 +63,12 @@
                 Preencha um valor entre R$30,00 e R$350,00.
               </b-form-invalid-feedback>
             </template>
-          </b-input-group>
+          </b-form-group>
 
           <section class="radio-group mt-3 mb-3">
+            <label id="group-metodos-pagamento" class="d-block">
+              Formas de pagamento da consulta *
+            </label>
             <div class="checkbtn">
               <input
                 v-model="cadastro.metodosDePagamento.pix"

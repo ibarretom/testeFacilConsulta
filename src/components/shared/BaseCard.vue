@@ -13,29 +13,27 @@
     tag="section"
   >
     <b-card-text>
-      <b-container class="no-padding">
-        <b-row>
-          <b-col cols="12" lg="6">
-            <slot />
-          </b-col>
-          <b-col
-            lg="6"
-            class="
-              d-flex
-              hide-mobile
-              justify-content-center
-              align-items-center
-              pr-0
-            "
-          >
-            <b-img
-              :src="require(`@/assets/imagens/${imagem}`)"
-              fluid
-              alt="background-image"
-            ></b-img>
-          </b-col>
-        </b-row>
-      </b-container>
+      <b-row>
+        <b-col cols="12" lg="6">
+          <slot />
+        </b-col>
+        <b-col
+          lg="6"
+          class="
+            d-flex
+            hide-mobile
+            justify-content-center
+            align-items-center
+            pr-0
+          "
+        >
+          <b-img
+            :src="require(`@/assets/imagens/${imagem}`)"
+            fluid
+            alt="background-image"
+          ></b-img>
+        </b-col>
+      </b-row>
     </b-card-text>
   </b-card>
 </template>
@@ -66,7 +64,7 @@ h4 {
   font-weight: 900;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
   .hide-mobile {
     display: none !important;
   }

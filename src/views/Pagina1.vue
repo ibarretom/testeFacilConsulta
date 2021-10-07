@@ -47,10 +47,13 @@
           ></b-form-input>
 
           <template v-if="$v.cpf.$error">
-            <b-form-invalid-feedback :state="$v.cpf.required">
+            <b-form-invalid-feedback
+              v-if="!$v.cpf.required"
+              :state="$v.cpf.required"
+            >
               Este campo é obrigatório.
             </b-form-invalid-feedback>
-            <b-form-invalid-feedback :state="$v.cpf.cpfValido">
+            <b-form-invalid-feedback v-else :state="$v.cpf.cpfValido">
               Insira um CPF válido
             </b-form-invalid-feedback>
           </template>
@@ -73,10 +76,13 @@
           ></b-form-input>
 
           <template v-if="$v.numeroCelular.$error">
-            <b-form-invalid-feedback :state="$v.numeroCelular.required">
+            <b-form-invalid-feedback
+              v-if="!$v.numeroCelular.required"
+              :state="$v.numeroCelular.required"
+            >
               Este campo é obrigatório.
             </b-form-invalid-feedback>
-            <b-form-invalid-feedback :state="$v.numeroCelular.valido">
+            <b-form-invalid-feedback v-else :state="$v.numeroCelular.valido">
               Insira um número celular válido
             </b-form-invalid-feedback>
           </template>
