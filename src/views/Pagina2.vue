@@ -65,7 +65,7 @@
             </template>
           </b-form-group>
 
-          <section class="radio-group mt-3 mb-3">
+          <section class="mt-3 mb-3">
             <label id="group-metodos-pagamento" class="d-block">
               Formas de pagamento da consulta *
             </label>
