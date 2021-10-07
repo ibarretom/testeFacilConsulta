@@ -2,7 +2,6 @@
   <div class="pagina">
     <base-card titulo="Sobre o profissional" imagem="desktop-pagina-1.png">
       <p><strong>Dados do profissional</strong></p>
-
       <b-form>
         <b-form-group
           label-for="group-nome-completo"
@@ -11,16 +10,24 @@
           class="mt-2"
         >
           <b-form-input
-            v-model="$store.state.cadastro.nomeCompleto"
+            v-model="cadastro.nomeCompleto"
             placeholder="Digite o nome completo"
             id="input-nome-completo"
             autocomplete="off"
             type="text"
             required
           ></b-form-input>
-          <b-form-invalid-feedback :state="validateNomeCompleto">
-            Campo inválido.
-          </b-form-invalid-feedback>
+
+          <template v-if="$v.nomeCompleto.$error">
+            <b-form-invalid-feedback :state="$v.nomeCompleto.required">
+              Este campo é obrigatório.
+            </b-form-invalid-feedback>
+            <b-form-invalid-feedback
+              :state="$v.nomeCompleto.minLength && $v.nomeCompleto.maxLength"
+            >
+              O nome completo deve ter de 3 a 48 caracteres
+            </b-form-invalid-feedback>
+          </template>
         </b-form-group>
 
         <b-form-group
@@ -31,7 +38,7 @@
         >
           <b-form-input
             v-mask="'###.###.###-##'"
-            v-model="$store.state.cadastro.cpf"
+            v-model="cadastro.cpf"
             placeholder="Digite um CPF"
             id="input-cpf"
             autocomplete="off"
@@ -39,9 +46,14 @@
             required
           ></b-form-input>
 
-          <b-form-invalid-feedback :state="validateCpf">
-            Campo inválido.
-          </b-form-invalid-feedback>
+          <template v-if="$v.cpf.$error">
+            <b-form-invalid-feedback :state="$v.cpf.required">
+              Este campo é obrigatório.
+            </b-form-invalid-feedback>
+            <b-form-invalid-feedback :state="$v.cpf.cpfValido">
+              Insira um CPF válido
+            </b-form-invalid-feedback>
+          </template>
         </b-form-group>
 
         <b-form-group
@@ -51,7 +63,7 @@
           class="mt-2 width-70"
         >
           <b-form-input
-            v-model="$store.state.cadastro.numeroCelular"
+            v-model="cadastro.numeroCelular"
             placeholder="(00) 0 0000-0000"
             v-mask="'(##) # ####-####'"
             id="input-numero-celular"
@@ -60,9 +72,14 @@
             required
           ></b-form-input>
 
-          <b-form-invalid-feedback :state="validateNumeroCelular">
-            Campo inválido.
-          </b-form-invalid-feedback>
+          <template v-if="$v.numeroCelular.$error">
+            <b-form-invalid-feedback :state="$v.numeroCelular.required">
+              Este campo é obrigatório.
+            </b-form-invalid-feedback>
+            <b-form-invalid-feedback :state="$v.numeroCelular.valido">
+              Insira um número celular válido
+            </b-form-invalid-feedback>
+          </template>
         </b-form-group>
 
         <section class="d-flex justify-content-between mt-2">
@@ -72,7 +89,7 @@
             label="Estado*"
           >
             <b-form-select
-              v-model="$store.state.cadastro.regiao.estado"
+              v-model="cadastro.regiao.estado"
               @change="setOptionsCidade($event)"
               :options="options.estados"
               placeholder="Selecione"
@@ -81,9 +98,11 @@
               required
             ></b-form-select>
 
-            <b-form-invalid-feedback :state="validateEstado">
-              Campo inválido.
-            </b-form-invalid-feedback>
+            <template v-if="$v.estado.$error">
+              <b-form-invalid-feedback :state="$v.estado.required">
+                Este campo é obrigatório.
+              </b-form-invalid-feedback>
+            </template>
           </b-form-group>
 
           <b-form-group
@@ -92,16 +111,18 @@
             label="Cidade*"
           >
             <b-form-select
-              v-model="$store.state.cadastro.regiao.cidade"
+              v-model="cadastro.regiao.cidade"
               :options="options.cidades"
               autocomplete="off"
               id="select-cidade"
               required
             ></b-form-select>
 
-            <b-form-invalid-feedback :state="validateCidade">
-              Campo inválido.
-            </b-form-invalid-feedback>
+            <template v-if="$v.cidade.$error">
+              <b-form-invalid-feedback :state="$v.cidade.required">
+                Este campo é obrigatório.
+              </b-form-invalid-feedback>
+            </template>
           </b-form-group>
         </section>
       </b-form>
@@ -122,52 +143,40 @@
 
 <script>
 // @ is an alias to /src
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import AppBotaoProximo from "@/components/shared/AppBotaoProximo";
 import BaseCard from "@/components/shared/BaseCard";
+import { validationMixin } from "vuelidate";
+import { mapState } from "vuex";
+
 export default {
   name: "Pagina1",
   components: {
     AppBotaoProximo,
     BaseCard,
   },
+  mixins: [validationMixin],
   computed: {
-    validateNomeCompleto() {
-      const nomeCompleto = this.$store.state.cadastro.nomeCompleto;
-      return (
-        this.noValidate ||
-        (nomeCompleto.length >= 3 && nomeCompleto.length <= 48)
-      );
+    ...mapState({
+      cadastro: (state) => state.cadastro,
+    }),
+    nomeCompleto() {
+      return this.cadastro.nomeCompleto;
     },
-
-    validateCpf() {
-      const cpf = this.$store.state.cadastro.cpf;
-      return this.noValidate || (cpf.length > 0 && cpf.length == 14);
+    cpf() {
+      return this.cadastro.cpf;
     },
-
-    validateNumeroCelular() {
-      const numeroCelular = this.$store.state.cadastro.numeroCelular;
-      return (
-        this.noValidate ||
-        (numeroCelular.length > 0 && numeroCelular.length == 16)
-      );
+    numeroCelular() {
+      return this.cadastro.numeroCelular;
     },
-
-    validateEstado() {
-      return this.noValidate || this.estado.length > 0;
-    },
-
-    validateCidade() {
-      const cidade = this.$store.state.cadastro.regiao.cidade;
-      return this.noValidate || cidade.length > 0;
-    },
-
     estado() {
-      return this.$store.state.cadastro.regiao.estado;
+      return this.cadastro.regiao.estado;
+    },
+    cidade() {
+      return this.cadastro.regiao.cidade;
     },
   },
   data: () => ({
-    noValidate: true,
-
     options: {
       estados: [
         { value: "", text: "Selecione" },
@@ -178,7 +187,7 @@ export default {
       cidades: [{ value: "", text: "Selecione" }],
     },
 
-    cidades: [
+    cidadesValidas: [
       { value: "", text: "Selecione", estado: "" },
       { value: "Londrina", text: "Londrina", estado: "Paraná" },
       { value: "Maringá", text: "Maringá", estado: "Paraná" },
@@ -205,32 +214,40 @@ export default {
     ],
   }),
 
+  validations: {
+    nomeCompleto: {
+      required,
+      maxLength: maxLength(48),
+      minLength: minLength(3),
+    },
+    cpf: {
+      required,
+      cpfValido: (cpf) => cpf.length == 14,
+    },
+    numeroCelular: {
+      required,
+      valido: (numeroCelular) => numeroCelular.length == 16,
+    },
+    estado: { required },
+    cidade: { required },
+  },
+
   watch: {
     estado() {
-      this.$store.state.cadastro.regiao.cidade = "";
+      this.cadastro.regiao.cidade = "";
     },
   },
 
   methods: {
-    validarCampos() {
-      return (
-        this.validateNomeCompleto &&
-        this.validateCpf &&
-        this.validateNumeroCelular &&
-        this.validateEstado &&
-        this.validateCidade
-      );
-    },
-
     proximaPagina() {
-      this.noValidate = false;
-      const camposValidos = this.validarCampos();
+      this.$v.$touch();
+      const camposValidos = !this.$v.$anyError || !this.$v.$error;
       if (camposValidos) this.$router.push("/Pagina2");
     },
 
     getOptionsCidades(estadoSelecionado) {
       const vazio = "";
-      return this.cidades.filter((cidade) => {
+      return this.cidadesValidas.filter((cidade) => {
         return cidade.estado == vazio || cidade.estado == estadoSelecionado;
       });
     },
@@ -241,9 +258,10 @@ export default {
   },
 
   created() {
-    const estado = this.$store.state.cadastro.regiao.estado;
+    const estado = this.cadastro.regiao.estado;
     const possuiEstado = estado != "";
     if (possuiEstado) this.setOptionsCidade(estado);
+    console.log(this);
   },
 };
 </script>
