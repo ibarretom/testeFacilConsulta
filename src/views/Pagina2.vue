@@ -24,13 +24,18 @@
           >
             <b-form-select
               id="input-especialidade-principal"
-              v-model="$store.state.cadastro.especialidadePrincipal"
+              v-model="cadastro.especialidadePrincipal"
               :options="options.especialidade"
               required
             ></b-form-select>
-            <b-form-invalid-feedback :state="validateEspecialidadePrincipal">
-              Este campo precisa ser preenchido
-            </b-form-invalid-feedback>
+
+            <template v-if="$v.especialidadePrincipal.$error">
+              <b-form-invalid-feedback
+                :state="$v.especialidadePrincipal.required"
+              >
+                Este campo é obrigatório.
+              </b-form-invalid-feedback>
+            </template>
           </b-form-group>
 
           <b-input-group
@@ -42,21 +47,28 @@
           >
             <b-form-input
               placeholder="valor"
-              v-model="$store.state.cadastro.preco"
+              v-model="cadastro.preco"
               v-money="'money'"
               id="input-valor"
               type="text"
               required
             ></b-form-input>
-            <b-form-invalid-feedback :state="validatePreco">
-              Preencha este campo com um valor entre R$30,00 e R$350,00
-            </b-form-invalid-feedback>
+
+            <template v-if="$v.preco.$error">
+              <b-form-invalid-feedback :state="$v.preco.required">
+                Este campo é obrigatório.
+              </b-form-invalid-feedback>
+
+              <b-form-invalid-feedback :state="$v.preco.between">
+                Preencha um valor entre R$30,00 e R$350,00.
+              </b-form-invalid-feedback>
+            </template>
           </b-input-group>
 
           <section class="radio-group mt-3 mb-3">
             <div class="checkbtn">
               <input
-                v-model="$store.state.cadastro.metodosDePagamento.pix"
+                v-model="cadastro.metodosDePagamento.pix"
                 name="pagamento"
                 type="checkbox"
                 value="true"
@@ -67,7 +79,7 @@
 
             <div class="checkbtn">
               <input
-                v-model="$store.state.cadastro.metodosDePagamento.dinheiro"
+                v-model="cadastro.metodosDePagamento.dinheiro"
                 value="true"
                 name="pagamento"
                 id="Em-dinheiro"
@@ -78,7 +90,7 @@
 
             <div class="checkbtn">
               <input
-                v-model="$store.state.cadastro.metodosDePagamento.cartao"
+                v-model="cadastro.metodosDePagamento.cartao"
                 name="pagamento"
                 value="true"
                 type="checkbox"
@@ -86,28 +98,28 @@
               />
               <label for="cartao">
                 <p class="pa-0 mb-0">Cartão</p>
-                <div
-                  v-if="$store.state.cadastro.metodosDePagamento.cartao"
-                  class="parcelas"
-                >
+
+                <div v-if="cadastro.metodosDePagamento.cartao" class="parcelas">
                   <b-form-group label="Parcelamento em">
                     <b-form-radio-group
                       name="radios-stacked"
-                      v-model="
-                        $store.state.cadastro.metodosDePagamento.parcelas
-                      "
+                      v-model="cadastro.metodosDePagamento.parcelas"
                       :options="options.parcelamento"
                       stacked
                     ></b-form-radio-group>
-                    <b-form-invalid-feedback :state="validateParcelas">
-                      Este campo precisa ser preenchido.
-                    </b-form-invalid-feedback>
+
+                    <template v-if="$v.parcelas.$error">
+                      <b-form-invalid-feedback :state="$v.parcelas.requiredIf">
+                        Este campo é obrigatório.
+                      </b-form-invalid-feedback>
+                    </template>
                   </b-form-group>
                 </div>
               </label>
             </div>
-            <b-form-invalid-feedback :state="validateFormaDePagamento">
-              Este campo precisa ser preenchido
+
+            <b-form-invalid-feedback :state="validateFormasDePagamento">
+              Este campo é obrigatório.
             </b-form-invalid-feedback>
           </section>
         </b-form>
@@ -130,8 +142,11 @@
 
 <script>
 // @ is an alias to /src
+import { required, requiredIf, between } from "vuelidate/lib/validators";
 import AppBotaoProximo from "@/components/shared/AppBotaoProximo";
 import BaseCard from "@/components/shared/BaseCard";
+import { validationMixin } from "vuelidate";
+import { mapState } from "vuex";
 
 export default {
   name: "Pagina2",
@@ -139,38 +154,38 @@ export default {
     AppBotaoProximo,
     BaseCard,
   },
+  mixins: [validationMixin],
   computed: {
-    validateEspecialidadePrincipal() {
-      const especialidade = this.$store.state.cadastro.especialidadePrincipal;
-      return this.noValidate || especialidade.length > 0;
-    },
-    validatePreco() {
-      const preco = this.$store.state.cadastro.preco;
-      return (
-        this.noValidate ||
-        (parseFloat(preco.split(".").join().replace(",", ".")) >= 30 &&
-          parseFloat(preco.split(".").join().replace(",", ".")) <= 350)
+    ...mapState({
+      cadastro: (state) => state.cadastro,
+    }),
+
+    preco() {
+      const precoNumber = parseFloat(
+        this.cadastro.preco.split(".").join("").replace(",", ".")
       );
+      return precoNumber;
     },
-    validateFormaDePagamento() {
+
+    especialidadePrincipal() {
+      return this.cadastro.especialidadePrincipal;
+    },
+
+    validateFormasDePagamento() {
       const pix = this.$store.state.cadastro.metodosDePagamento.pix;
       const dinheiro = this.$store.state.cadastro.metodosDePagamento.dinheiro;
       return this.noValidate || this.cartao || dinheiro || pix;
     },
-    validateParcelas() {
-      const numeroDeParcelas =
-        !!this.$store.state.cadastro.metodosDePagamento.parcelas;
 
-      if (this.cartao) {
-        if (this.noValidate || numeroDeParcelas) return true;
-        return false;
-      }
-      return true;
-    },
     cartao() {
-      return this.$store.state.cadastro.metodosDePagamento.cartao;
+      return this.cadastro.metodosDePagamento.cartao;
+    },
+
+    parcelas() {
+      return this.cadastro.metodosDePagamento.parcelas;
     },
   },
+
   data: () => ({
     noValidate: true,
     options: {
@@ -190,24 +205,31 @@ export default {
       ],
     },
   }),
-  watch: {
-    cartao(forVerdadeiro) {
-      if (!forVerdadeiro)
-        this.$store.state.cadastro.metodosDePagamento.parcelas = "";
+
+  validations: {
+    especialidadePrincipal: { required },
+    preco: {
+      required,
+      between: between(30, 350),
+    },
+    parcelas: {
+      requiredIf: requiredIf(function () {
+        return this.cartao;
+      }),
     },
   },
-  methods: {
-    validarCampos() {
-      return (
-        this.validateEspecialidadePrincipal &&
-        this.validatePreco &&
-        this.validateFormaDePagamento &&
-        this.validateParcelas
-      );
+
+  watch: {
+    cartao(forVerdadeiro) {
+      if (!forVerdadeiro) this.cadastro.metodosDePagamento.parcelas = "";
     },
+  },
+
+  methods: {
     proximaPagina() {
       this.noValidate = false;
-      const camposValidos = this.validarCampos();
+      this.$v.$touch();
+      const camposValidos = !this.$v.$error && this.validateFormasDePagamento;
       if (camposValidos) this.$router.push("/pagina3");
     },
   },
